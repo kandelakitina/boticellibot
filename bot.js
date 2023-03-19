@@ -22,6 +22,7 @@ bot.on("message", async (msg) => {
   console.log(`History -4:${localHistory[localHistory.length - 4]}`);
   console.log(`History -3:${localHistory[localHistory.length - 3]}`);
   console.log(`History -2:${localHistory[localHistory.length - 2]}`);
+  console.log(`Current: ${msg.text}\n`);
 
   const response = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
@@ -51,19 +52,19 @@ bot.on("message", async (msg) => {
       // Local history handling
       {
         role: "user",
-        content: `${localHistory[localHistory.length - 5]}`,
+        content: `${localHistory[localHistory.length - 5] ?? "Смотри следующее сообщение"}`,
       },
       {
         role: "user",
-        content: `${localHistory[localHistory.length - 4]}`,
+        content: `${localHistory[localHistory.length - 4] ?? "Смотри следующее сообщение"}`,
       },
       {
         role: "user",
-        content: `${localHistory[localHistory.length - 3]}`,
+        content: `${localHistory[localHistory.length - 3] ?? "Смотри следующее сообщение"}`,
       },
       {
         role: "user",
-        content: `${localHistory[localHistory.length - 2]}`,
+        content: `${localHistory[localHistory.length - 2] ?? "Смотри следующее сообщение"}`,
       },
       {
         role: "user",
