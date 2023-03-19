@@ -35,7 +35,7 @@ echo "TELEGRAM_API_KEY='<your token>'" >> .env
 ```
 5. Run your app:
 ```bash
-node src/bot.js
+node bot.js
 ```
 
 # Getting tokens
