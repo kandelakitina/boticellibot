@@ -12,7 +12,7 @@ name: Publish Docker image
 on:
   push:
     branches:
-      - master
+      - testing
 
 jobs:
   push_to_registry:
@@ -54,21 +54,19 @@ jobs:
       uses: appleboy/ssh-action@v0.1.8
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        TELEGRAM_API_KEY: ${{ secrets.TELEGRAM_API_KEY }}
+        TELEGRAM_TESTING_API_KEY: ${{ secrets.TELEGRAM_TESTING_API_KEY }}
 
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        envs: OPENAI_API_KEY,TELEGRAM_API_KEY
+        envs: OPENAI_API_KEY,TELEGRAM_TESTING_API_KEY
+        run: bash update-env-file.sh
         script: |          
           docker stop boticellibot
           docker rm boticellibot
-          docker rmi boticelli/boticellibot:master
-          docker pull boticelli/boticellibot:master
-          echo "TELEGRAM_API_KEY=${TELEGRAM_API_KEY}" >> .env
-          echo "OPENAI_API_KEY=${OPENAI_API_KEY}" >> .env
-          source ~/.bashrc
+          docker rmi boticelli/boticellibot:testing
+          docker pull boticelli/boticellibot:testing
           docker run -t -d --env-file ~/.env \
-          --name boticellibot boticelli/boticellibot:master
+          --name boticellibot boticelli/boticellibot:testing
