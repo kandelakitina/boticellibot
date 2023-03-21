@@ -21,3 +21,11 @@ else
   echo "OPENAI_API_KEY=${OPENAI_API_KEY}" >> .env
 fi
 
+# Remove current instance
+docker stop boticellibot_testing_bot
+docker rm boticellibot_testing_bot
+docker rmi boticelli/boticellibot:testing
+docker pull boticelli/boticellibot:testing
+
+# Run updated instance
+docker run -t -d --env-file ~/.env --name boticelli_testing_bot boticelli/boticellibot:testing

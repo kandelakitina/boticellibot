@@ -57,7 +57,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
 
-        source: ".github/workflows/scripts/update-env-file.sh"
+        source: ".github/workflows/scripts/run_testing_bot.sh"
         target: "scripts"
         strip_components: 3
 
@@ -75,10 +75,4 @@ jobs:
 
         envs: OPENAI_API_KEY,TELEGRAM_TESTING_API_KEY
         script: |          
-          docker stop boticellibot
-          docker rm boticellibot
-          docker rmi boticelli/boticellibot:testing
-          docker pull boticelli/boticellibot:testing
-          bash ~/scripts/update-env-file.sh
-          docker run -t -d --env-file ~/.env \
-          --name boticellibot boticelli/boticellibot:testing
+          bash ~/scripts/run_testing_bot.sh
