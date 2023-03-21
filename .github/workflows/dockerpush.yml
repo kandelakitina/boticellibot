@@ -54,14 +54,14 @@ jobs:
       uses: appleboy/ssh-action@v0.1.8
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        TELEGRAM_TESTING_API_KEY: ${{ secrets.TELEGRAM_TESTING_API_KEY }}
+        TELEGRAM_API_KEY: ${{ secrets.TELEGRAM_TESTING_API_KEY }}
 
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        envs: OPENAI_API_KEY,TELEGRAM_TESTING_API_KEY
+        envs: OPENAI_API_KEY,TELEGRAM_API_KEY
         run: bash update-env-file.sh
         script: |          
           docker stop boticellibot
