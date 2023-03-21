@@ -18,6 +18,8 @@ jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
+
+
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
@@ -41,3 +43,32 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  update_on_server:
+    name: SSHing onto selectel server and running update.sh script
+    needs: "push_to_registry"
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using password
+
+      uses: appleboy/ssh-action@v0.1.8
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        TELEGRAM_API_KEY: ${{ secrets.TELEGRAM_API_KEY }}
+
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        envs: OPENAI_API_KEY,TELEGRAM_API_KEY
+        script: |          
+          docker stop boticellibot
+          docker rm boticellibot
+          docker rmi boticelli/boticellibot:master
+          docker pull boticelli/boticellibot:master
+          echo "TELEGRAM_API_KEY=${TELEGRAM_API_KEY}" >> .env
+          echo "OPENAI_API_KEY=${OPENAI_API_KEY}" >> .env
+          source ~/.bashrc
+          docker run -t -d --env-file ~/.env \
+          --name boticellibot boticelli/boticellibot:master
