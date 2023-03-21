@@ -56,14 +56,15 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
-        source: update-env-file.sh
-        target: ~/update-env-file.sh
+        source: "update-env-file.sh"
+        target: "update-env-file.sh"
 
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.8
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         TELEGRAM_TESTING_API_KEY: ${{ secrets.TELEGRAM_TESTING_API_KEY }}
+
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
