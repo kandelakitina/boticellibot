@@ -9,7 +9,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 const TelegramBot = require("node-telegram-bot-api");
-const bot = new TelegramBot(process.env.TELEGRAM_API_KEY, { polling: true });
+const bot = new TelegramBot(process.env.TELEGRAM_TESTING_API_KEY, { polling: true });
 
 // Just say something on /start
 bot.onText(/\/start/, (msg) => {
