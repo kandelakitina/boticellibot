@@ -22,8 +22,8 @@ else
 fi
 
 # Remove current instance
-docker stop boticellibot_testing_bot
-docker rm boticellibot_testing_bot
+docker stop boticelli_testing_bot
+docker rm boticelli_testing_bot
 docker rmi boticelli/boticellibot:testing
 docker pull boticelli/boticellibot:testing
 

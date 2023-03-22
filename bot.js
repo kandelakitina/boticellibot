@@ -15,10 +15,15 @@ const bot = new TelegramBot(process.env.TELEGRAM_TESTING_API_KEY, { polling: tru
 bot.onText(/\/start/, (msg) => {
   bot.sendMessage(msg.chat.id, "Я тут!");
 });
-const localHistory = [];
+
+
+const globalHistory = {};
 
 bot.on("message", async (msg) => {
+  const chatId = msg.chat.id;
+  const localHistory = globalHistory[chatId] || [];
   localHistory.push(msg.text);
+  globalHistory[chatId] = localHistory;
 
   console.log(`History -5:${localHistory[localHistory.length - 5]}`);
   console.log(`History -4:${localHistory[localHistory.length - 4]}`);
@@ -76,5 +81,5 @@ bot.on("message", async (msg) => {
   });
 
   // Send the generated text back to the user
-  bot.sendMessage(msg.chat.id, response.data.choices[0].message.content);
+  bot.sendMessage(chatId, response.data.choices[0].message.content);
 });
