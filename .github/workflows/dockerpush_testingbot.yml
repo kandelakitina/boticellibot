@@ -61,7 +61,7 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
 
-        source: ".github/workflows/scripts/run_testing_bot.sh"
+        source: ".github/workflows/scripts/run_testingbot.sh"
         target: "scripts"
         strip_components: 3
 
@@ -76,4 +76,4 @@ jobs:
 
         envs: OPENAI_API_KEY,TELEGRAM_API_KEY
         script: |          
-          bash ~/scripts/run_testing_bot.sh
+          bash ~/scripts/run_testingbot.sh

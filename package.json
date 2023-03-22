@@ -1,6 +1,6 @@
 {
   "name": "boticellibot",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A simple OpenAI GPT-3 based Telegram bot made by boticelli",
   "main": "bot.js",
   "scripts": {
