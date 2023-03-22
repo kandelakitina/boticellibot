@@ -65,7 +65,9 @@ jobs:
       uses: appleboy/ssh-action@v0.1.8
       env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        TELEGRAM_TESTING_API_KEY: ${{ secrets.TELEGRAM_TESTING_API_KEY }}
+
+        # Change API for telegram is you use a different bot to testing branch
+        TELEGRAM_API_KEY: ${{ secrets.TELEGRAM_TESTING_API_KEY }}
 
       with:
         host: ${{ secrets.HOST }}
@@ -73,6 +75,6 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
 
-        envs: OPENAI_API_KEY,TELEGRAM_TESTING_API_KEY
+        envs: OPENAI_API_KEY,TELEGRAM_API_KEY
         script: |          
           bash ~/scripts/run_testing_bot.sh
