@@ -18,6 +18,9 @@ jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
+    # env:
+    #   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+    #   TELEGRAM_API_KEY: ${{ secrets.TELEGRAM_TESTING_API_KEY }}
 
     steps:
       - name: Check out the repo
@@ -42,6 +45,10 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            "TELEGRAM_API_KEY=${{ secrets.TELEGRAM_TESTING_API_KEY }}"
+            "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}"
+
 
   update_on_server:
     name: Updating and Restarting Docker Image
@@ -63,11 +70,6 @@ jobs:
 
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@v0.1.8
-      env:
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-
-        # Change API for telegram is you use a different bot to testing branch
-        TELEGRAM_API_KEY: ${{ secrets.TELEGRAM_TESTING_API_KEY }}
 
       with:
         host: ${{ secrets.HOST }}
