@@ -32,7 +32,7 @@ bot.on("message", async (msg) => {
     console.log(`Current: ${msg.text}\n`);
 
     const response = await openai.createChatCompletion({
-      model: "gpt-4",
+      model: "gpt-3.5-turbo",
       messages: [
 	{
 	  role: "system",
