@@ -1,8 +1,8 @@
 // Import all required modules
 require("dotenv").config();
-import { Configuration, OpenAIApi } from "openai";
-import TelegramBot from "node-telegram-bot-api";
-import getMessageTemplate from "./messageTemplate";
+const { Configuration, OpenAIApi } = require("openai");
+const TelegramBot = require("node-telegram-bot-api");
+const getMessageTemplate = require("./messageTemplate");
 
 // Set up OpenAI API
 const configuration = new Configuration({
@@ -43,10 +43,10 @@ async function handleMessage(chatId, msgText) {
   bot.sendMessage(chatId, response.data.choices[0].message.content);
 }
 
-// // On /start command
-// bot.onText(/\/start/, (msg) => {
-//   bot.sendMessage(msg.chat.id, "Ну шо?");
-// });
+// On /start command
+bot.onText(/\/start/, (msg) => {
+  bot.sendMessage(msg.chat.id, "Я тут!");
+});
 
 // On new message
 bot.on("message", async (msg) => {
