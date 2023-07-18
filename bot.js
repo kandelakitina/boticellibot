@@ -42,16 +42,9 @@ bot.on("message", async (msg) => {
     bot.sendMessage(chatId, response.data.choices[0].message.content);
   } catch (error) {
     console.error(error);
-    if (error.message.includes("overloaded with other requests")) {
-      bot.sendMessage(
-        msg.chat.id,
-        "ChatGPT is over capacity, try a bit later.",
-      );
-    } else {
-      bot.sendMessage(
-        msg.chat.id,
-        "Something went wrong. Please try again later.",
-      );
-    }
+    bot.sendMessage(
+      msg.chat.id,
+      "Something went wrong. Please try again later.",
+    );
   }
 });
