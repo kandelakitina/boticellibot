@@ -1,50 +1,58 @@
+// Import all required modules
 require("dotenv").config();
+import { Configuration, OpenAIApi } from "openai";
+import TelegramBot from "node-telegram-bot-api";
+import getMessageTemplate from "./messageTemplate";
 
-const port = process.env.PORT || 8080;
-
-const { Configuration, OpenAIApi } = require("openai");
+// Set up OpenAI API
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 
-const TelegramBot = require("node-telegram-bot-api");
+// Set up Telegram bot
 const bot = new TelegramBot(process.env.TELEGRAM_API_KEY, { polling: true });
 
-// Import message templates
-const getMessageTemplate = require("./messageTemplate");
-
-// Just say something on /start
-bot.onText(/\/start/, (msg) => {
-  bot.sendMessage(msg.chat.id, "Я тут!");
-});
-
+// Global history storage
 const globalHistory = {};
+
+// Error handling function
+function handleError(chatId, error) {
+  console.error(error);
+  bot.sendMessage(chatId, "Something went wrong. Please try again later.");
+}
+
+// Message handling function
+async function handleMessage(chatId, msgText) {
+  const localHistory = globalHistory[chatId] || [];
+  localHistory.push(msgText);
+  globalHistory[chatId] = localHistory;
+
+  console.log(`History -5:${localHistory[localHistory.length - 5]}`);
+  console.log(`History -4:${localHistory[localHistory.length - 4]}`);
+  console.log(`History -3:${localHistory[localHistory.length - 3]}`);
+  console.log(`History -2:${localHistory[localHistory.length - 2]}`);
+  console.log(`Current: ${msgText}\n`);
+
+  const response = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    messages: getMessageTemplate(localHistory, msgText),
+  });
+
+  // Send the generated text back to the user
+  bot.sendMessage(chatId, response.data.choices[0].message.content);
+}
+
+// // On /start command
+// bot.onText(/\/start/, (msg) => {
+//   bot.sendMessage(msg.chat.id, "Ну шо?");
+// });
+
+// On new message
 bot.on("message", async (msg) => {
   try {
-    const chatId = msg.chat.id;
-    const localHistory = globalHistory[chatId] || [];
-    localHistory.push(msg.text);
-    globalHistory[chatId] = localHistory;
-
-    console.log(`History -5:${localHistory[localHistory.length - 5]}`);
-    console.log(`History -4:${localHistory[localHistory.length - 4]}`);
-    console.log(`History -3:${localHistory[localHistory.length - 3]}`);
-    console.log(`History -2:${localHistory[localHistory.length - 2]}`);
-    console.log(`Current: ${msg.text}\n`);
-
-    const response = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo",
-      messages: getMessageTemplate(localHistory, msg.text),
-    });
-
-    // Send the generated text back to the user
-    bot.sendMessage(chatId, response.data.choices[0].message.content);
+    handleMessage(msg.chat.id, msg.text);
   } catch (error) {
-    console.error(error);
-    bot.sendMessage(
-      msg.chat.id,
-      "Something went wrong. Please try again later.",
-    );
+    handleError(msg.chat.id, error);
   }
 });
