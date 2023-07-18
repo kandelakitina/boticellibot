@@ -19,7 +19,11 @@ const globalHistory = {};
 // Error handling function
 function handleError(chatId, error) {
   console.error(error);
-  bot.sendMessage(chatId, "Something went wrong. Please try again later.");
+  if (error.message.includes("overloaded with other requests")) {
+    bot.sendMessage(chatId, "ChatGPT is over capacity, try a bit later.");
+  } else {
+    bot.sendMessage(chatId, "Something went wrong. Please try again later.");
+  }
 }
 
 // Message handling function
